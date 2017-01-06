@@ -16,36 +16,37 @@ namespace FileTransferDrill
             return result;
         }
 
-        static string[] getArrayOfFiles()
+        static void getArrayOfFiles()
         {
-            string[] files = null;
-            List<string> listOfFiles = new List<string>;
-            files = System.IO.Directory.GetFiles("C:\\A\\");
+            List<string> listOfFiles = new List<string>();
+            string[] files = Directory.GetFiles("C:\\A\\");
             foreach(string f in files)
             {
                 DateTime fileCTime = File.GetCreationTime(f);
                 DateTime fileMTime = File.GetLastWriteTime(f);
-                if ((compareForNewness(fileCTime) > 1) || (compareForNewness(fileMTime) > 1))
+                if ((compareForNewness(fileCTime) > 0) || (compareForNewness(fileMTime) > 0))
                 {
                     listOfFiles.Add(f);
                 }
             }
+            transferFiles(listOfFiles);
+
         }
 
-        static void transferFiles(String[] listOfFiles)
+        static void transferFiles(List<string> listOfFiles)
         {
-
+            foreach (string f in listOfFiles)
+            {
+                File.Copy(f, "C:\\B\\" + Path.GetFileName(f), true);
+            }
+            return;
         }
         
         static void Main(string[] args)
         {
-            DateTime time = File.g("C:\\pyfund\\words.py");
-            string[] files = null;
-            files = Directory.GetFiles("C:\\A\\");
-            foreach(string f in files)
-            {
-                DateTime time = File.GetCreationTime(f);
-            }
+            getArrayOfFiles();
+            Console.WriteLine("All files created or modified in the past 24 hours in C:\\A\nhave been copied to C:\\B");
+            
 
         }
     }
